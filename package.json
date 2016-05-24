@@ -1,0 +1,24 @@
+{
+  "name": "wireframing",
+  "version": "1.0.0",
+  "description": "new wireframing framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsdesigned/wireframing.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bsdesigned/wireframing/issues"
+  },
+  "homepage": "https://github.com/bsdesigned/wireframing#readme",
+  "devDependencies": {
+    "browser-sync": "^2.12.8",
+    "gulp": "^3.9.1",
+    "gulp-connect-php": "0.0.7"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "wireframing",
+  "homepage": "https://github.com/bsdesigned/wireframing",
+  "authors": [
+    "Brent Starling <shout@bsdesigned.co.uk>"
+  ],
+  "description": "new wireframing framework for home projects",
+  "main": "",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^2.2.4",
+    "spectre.css": "^0.1.23"
+  }
+}
