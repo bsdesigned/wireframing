@@ -19,6 +19,10 @@
   "devDependencies": {
     "browser-sync": "^2.12.8",
     "gulp": "^3.9.1",
-    "gulp-connect-php": "0.0.7"
+    "gulp-clean": "^0.3.2",
+    "gulp-connect-php": "0.0.7",
+    "gulp-imagemin": "^3.0.1",
+    "gulp-util": "^3.0.7",
+    "ip": "^1.1.3"
   }
 }
