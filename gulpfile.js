@@ -1,57 +1,54 @@
-// Gulp 3.8 code... differs in 4.0
+// Basic Gulp File
+//
 var gulp = require('gulp'),
-    php = require('gulp-connect-php'),
-    browserSync = require('browser-sync'),
-    imagemin = require('gulp-imagemin'),
-    ip = require("ip"),
-    clean = require("gulp-clean"),
-    util = require("gulp-util");
+    bower = require('gulp-bower')
+    sass = require('gulp-sass')
+    notify = require('gulp-notify')
+    concat = require('gulp-concat')
+    scsslint = require('gulp-scss-lint')
+    browserSync = require('browser-sync').create()
+    php = require('gulp-connect-php')
+    ip = require('ip')
+    flatten = require('gulp-flatten')
+    imagemin = require('gulp-imagemin')
+    clean = require("gulp-clean")
+    utils = require("gulp-util");
 
-// GET YOUR IPADDRESS
-var myIP = ip.address();
+// GET YOUR IP AND HOLD IT
+var whatip = ip.address();
 
-// PORTNUMBERS
-var portNo1 = 8010
-var portNo2 = 8080
+// SET DEV IPs
+var port1 = 8010;
+var port2 = 8080;
 
-// BOOTSTRAP RELOAD
+// RELOAD BROWSER
 var reload  = browserSync.reload;
 
-// MOVE JS, CSS + PHP FILES
+var config = {
+    projectName: 'Wireframe',
+    sassPath: './resources/sass',
+    templatePath: './resources/templates',
+    cssPath: './build/css',
+    htmlPath: './resources/html',
+    imagePath: './resources/images',
+    rootPath: './resources',
+    jsPath: './resources/js',
+    bowerDir: './bower_components',
+    spectreDir: '.bower_components/spectre.css',
+}
+
 var filesToMove = [
-    './resources/js/*.js',
-    './resources/css/*.css',
-    './resources/**/*.php'
+    config.rootPath + '/**/*.php',
+    config.imagePath + '**/*/*.*',
+    config.jsPath + '/*.js'
 ];
 
-// PHP SERVER
-gulp.task('php', function() {
-    php.server({ base: 'build', hostname: myIP, port: portNo1, keepalive: true});
-});
 
-// BROWSER SYNC
-gulp.task('browser-sync', ['php'], function() {
-    browserSync({
-        proxy: myIP + ':' + portNo1,
-        port: portNo2,
-        open: true,
-        notify: true
-    });
-});
+// BOWER
+gulp.task('bower', function() {
 
-
-// C:EAN FILES/FOLDERS
-gulp.task('clean', function(){
-  return gulp.src(['build/*'], {read:false})
-  .pipe(clean());
-});
-
-// MOVE FILES
-gulp.task('move', ['clean'], function () {
-    // the base option sets the relative root for the set of files,
-    // preserving the folder structure
-    gulp.src(filesToMove, { base: './' })
-        .pipe(gulp.dest('build'));
+    return bower()
+        .pipe(gulp.dest(config.bowerDir))
 });
 
 // IMAGEMIN
@@ -61,6 +58,75 @@ gulp.task('imagemin', function () {
         .pipe(gulp.dest('build/images'));
 });
 
-gulp.task('default', ['move', 'imagemin', 'browser-sync'], function () {
-    gulp.watch(['resources/*.php'], [reload]);
+//FONTAWESOME
+gulp.task('icons', function() {
+    gulp.src([config.bowerDir + '/fontawesome/fonts/**.*'])
+        .pipe(gulp.dest('./build/fonts'));
+});
+
+//SCSSLINT
+gulp.task('scssLint', ['sassCompile'], function() {
+    return gulp.src(config.sassPath + '/**/*.scss')
+    .pipe(scsslint());
+});
+
+//JS Flatten
+gulp.task('jsFlatten', function() {
+    gulp.src([
+            'bower_components/**/*.min.js'
+            ], {base: './'})
+      .pipe(flatten())
+      .pipe(gulp.dest(config.jsPath));
+});
+
+//GULP-SASS
+gulp.task('sassCompile', function() {
+
+    return gulp.src(config.sassPath + '/main.scss')
+        .pipe(sass({
+            outputStyle: 'compressed'
+        }))
+        .pipe(gulp.dest('./build/css'))
+        .pipe(browserSync.reload({stream:true}));
+});
+
+gulp.task('moveFiles', function() {
+
+    gulp.src(filesToMove, { base: './resources' })
+        .pipe(gulp.dest('./build'))
+        .pipe(browserSync.reload({stream:true}));
+});
+
+//PHP
+gulp.task('php', function() {
+    php.server({ base: 'build', hostname:whatip, port: port1, keepalive: true});
+});
+
+// CLEAN FOLDERS
+gulp.task('clean', function(){
+    return gulp.src(['build/*'], {read:false})
+    .pipe(clean());
+});
+
+
+//BROWSER SYNC
+gulp.task('browserSync',['php'], function() {
+     browserSync.init({
+        proxy: whatip + ':' + port1,
+        port: port2,
+        open: true,
+        notify: true
+    });
+});
+
+
+//GULP SERVE
+gulp.task('serve', ['bower', 'clean', 'jsFlatten', 'icons', 'imagemin', 'scssLint', 'moveFiles', 'browserSync'], function() {
+    //DO WE NEED WATCHES HERE?
+
+        gulp.watch(config.rootPath + "/**/*.php", ['moveFiles']);
+        gulp.watch(config.sassPath + "/**/*.scss", ['scssLint', 'sassCompile']);
+        gulp.watch(config.jsPath + "/**/*.js", ['moveFiles']);
+        gulp.watch(config.rootPath + "/**/*.html", ['moveFiles']);
+        gulp.watch(config.imagePath + "/**/*.*", ['imagemin']);
 });

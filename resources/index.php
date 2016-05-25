@@ -4,11 +4,11 @@
 <head>
   <meta charset="utf-8">
 
-  <title>The HTML5 Herald</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  <title>Wireframe Layout</title>
+  <meta name="description" content="Wireframe Layout">
+  <meta name="author" content="BSD">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="css/main.css?v=1.0">
 
   <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -16,6 +16,7 @@
 </head>
 
 <body>
-  <script src="js/scripts.js"></script>
+<h1>Hello, World</h1>
+  <!-- script src="js/scripts.js"></script -->
 </body>
 </html>
