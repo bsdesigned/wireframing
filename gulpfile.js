@@ -104,7 +104,7 @@ gulp.task('php', function() {
 
 // CLEAN FOLDERS
 gulp.task('clean', function(){
-    return gulp.src(['build/*'], {read:false})
+    return gulp.src(['./build/*'], {read:false})
     .pipe(clean());
 });
 
@@ -121,7 +121,7 @@ gulp.task('browserSync',['php'], function() {
 
 
 //GULP SERVE
-gulp.task('serve', ['bower', 'clean', 'jsFlatten', 'icons', 'imagemin', 'scssLint', 'moveFiles', 'browserSync'], function() {
+gulp.task('serve', ['bower', 'jsFlatten', 'icons', 'imagemin', 'scssLint', 'moveFiles', 'browserSync'], function() {
     //DO WE NEED WATCHES HERE?
 
         gulp.watch(config.rootPath + "/**/*.php", ['moveFiles']);
