@@ -9,6 +9,7 @@
   "license": "MIT",
   "dependencies": {
     "jquery": "^2.2.4",
-    "spectre.css": "^0.1.23"
+    "spectre.css": "^0.1.23",
+    "font-awesome": "fontawesome#^4.6.3"
   }
 }

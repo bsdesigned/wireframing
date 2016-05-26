@@ -12,14 +12,17 @@ var gulp = require('gulp'),
     flatten = require('gulp-flatten')
     imagemin = require('gulp-imagemin')
     clean = require("gulp-clean")
-    utils = require("gulp-util");
+    utils = require("gulp-util")
+    importCss = require('gulp-import-css')
+    cssmin = require('gulp-cssmin')
+    rename = require('gulp-rename');
 
 // GET YOUR IP AND HOLD IT
 var whatip = ip.address();
 
 // SET DEV IPs
-var port1 = 8010;
-var port2 = 8080;
+var port1 = 8015;
+var port2 = 8085;
 
 // RELOAD BROWSER
 var reload  = browserSync.reload;
@@ -29,6 +32,7 @@ var config = {
     sassPath: './resources/sass',
     templatePath: './resources/templates',
     cssPath: './build/css',
+    moduleCSSPath: './resources/css',
     htmlPath: './resources/html',
     imagePath: './resources/images',
     rootPath: './resources',
@@ -39,8 +43,9 @@ var config = {
 
 var filesToMove = [
     config.rootPath + '/**/*.php',
-    config.imagePath + '**/*/*.*',
-    config.jsPath + '/*.js'
+    config.imagePath + '/**/*.*',
+    config.jsPath + '/*.js',
+    config.moduleCSSPath + '/*.min.css'
 ];
 
 
@@ -51,16 +56,27 @@ gulp.task('bower', function() {
         .pipe(gulp.dest(config.bowerDir))
 });
 
+// MODULE CSS
+gulp.task('moduleCSS', function() {
+    gulp.src(config.moduleCSSPath + '/modules.css')
+    .pipe(importCss())
+    .pipe(cssmin())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest(config.moduleCSSPath));
+});
+
 // IMAGEMIN
 gulp.task('imagemin', function () {
-    gulp.src('./resources/images/*')
+    gulp.src('./resources/images/**/*.*')
         .pipe(imagemin())
-        .pipe(gulp.dest('build/images'));
+        .pipe(gulp.dest('./build/images'));
 });
 
 //FONTAWESOME
 gulp.task('icons', function() {
-    gulp.src([config.bowerDir + '/fontawesome/fonts/**.*'])
+    gulp.src([config.bowerDir + '/font-awesome/fonts/**.*'])
+        .pipe(gulp.dest('./build/fonts'));
+    gulp.src([config.bowerDir + '/spectre.css/demo/font/fonts/**.*'])
         .pipe(gulp.dest('./build/fonts'));
 });
 
@@ -99,7 +115,7 @@ gulp.task('moveFiles', function() {
 
 //PHP
 gulp.task('php', function() {
-    php.server({ base: 'build', hostname:whatip, port: port1, keepalive: true});
+    php.server({ base: './build', hostname:whatip, port: port1, keepalive: true});
 });
 
 // CLEAN FOLDERS
@@ -121,7 +137,7 @@ gulp.task('browserSync',['php'], function() {
 
 
 //GULP SERVE
-gulp.task('serve', ['bower', 'jsFlatten', 'icons', 'imagemin', 'scssLint', 'moveFiles', 'browserSync'], function() {
+gulp.task('serve', ['bower', 'jsFlatten', 'icons', 'imagemin', 'scssLint', 'moduleCSS', 'moveFiles', 'browserSync'], function() {
     //DO WE NEED WATCHES HERE?
 
         gulp.watch(config.rootPath + "/**/*.php", ['moveFiles']);
