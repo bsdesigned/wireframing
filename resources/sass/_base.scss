@@ -1,0 +1,26 @@
+body,
+html {
+  background-color: $iao-first;
+  color: $iao-fifth;
+}
+
+.header {
+  background-color: $iao-first;
+  color: $iao-fifth;
+}
+
+.footer {
+  background-color: $iao-first;
+  color: $iao-fifth;
+}
+
+.content {
+  background-color: $iao-fifth;
+  color: $iao-fourth;
+}
+
+.styles {
+  .content {
+    background-color: #fff;
+  }
+}

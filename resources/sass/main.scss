@@ -1,4 +1,8 @@
 //include sass files here
+@import 'variables';
 
+@import 'base';
 
-h1 { font-size: 200px;}
+@import 'sign-up';
+
+@import 'styles';
